@@ -2250,6 +2250,7 @@ local emissaryIds = {[155432]=true,[155433]=true,[155434]=true}
 
 ---Checks if the specified clone is part of the current map configuration
 function MDT:IsCloneIncluded(enemyIdx, cloneIdx)
+    if not next(db.dungeonImport) then return false end
     local preset = MDT:GetCurrentPreset()
     local isCloneBlacktoothEvent = MDT.dungeonEnemies[db.currentDungeonIdx][enemyIdx]["clones"][cloneIdx].blacktoothEvent
     local cloneFaction = MDT.dungeonEnemies[db.currentDungeonIdx][enemyIdx]["clones"][cloneIdx].faction
@@ -2847,7 +2848,6 @@ function MDT:EnsureDBTables()
 	end
 
     --removed clones: remove data from presets
-    if next(db.dungeonImport) then
         for pullIdx,pull in pairs(preset.value.pulls) do
             for enemyIdx,clones in pairs(pull) do
 
@@ -2867,7 +2867,6 @@ function MDT:EnsureDBTables()
             end
             pull["color"] = pull["color"] or db.defaultColor
         end
-    end
 
     MDT:GetCurrentPreset().week = MDT:GetCurrentPreset().week or MDT:GetCurrentAffixWeek()
 
