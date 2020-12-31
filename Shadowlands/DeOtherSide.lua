@@ -93,7 +93,6 @@ MDT.mapPOIs[dungeonIndex] = {
         };
     };
 };
-
 MDT.dungeonEnemies[dungeonIndex] = {
     [1] = {
         ["clones"] = {

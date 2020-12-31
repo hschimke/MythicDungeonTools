@@ -220,12 +220,12 @@ MDT.scaleMultiplier = {}
 --lvl 4 affix, lvl 7 affix, tyrannical/fortified, seasonal affix
 local affixWeeks = {
     [1] =  {[1]=11,[2]=3,[3]=10,[4]=121}, -->>Bursting, Volcanic, Fortified
-    [2] = {[1]=7,[2]=124,[3]=9,[4]=121}, -->>Bolstering, Storming, Tyrannical
-    [3] = {[1]=123,[2]=12,[3]=10,[4]=121}, -->>Spiteful, Grievous, Fortified
-    [4] =  {[1]=0,[2]=0,[3]=0,[4]=0},
-    [5] =  {[1]=0,[2]=0,[3]=0,[4]=0},
-    [6] =  {[1]=0,[2]=0,[3]=0,[4]=0},
-    [7] =  {[1]=0,[2]=0,[3]=0,[4]=0},
+    [2] =  {[1]=7,[2]=124,[3]=9,[4]=121}, -->>Bolstering, Storming, Tyrannical
+    [3] =  {[1]=123,[2]=12,[3]=10,[4]=121}, -->>Spiteful, Grievous, Fortified
+    [4] =  {[1]=122,[2]=4,[3]=9,[4]=121}, -->>Inspiring, Necrotic, Tyrannical
+    [5] =  {[1]=8,[2]=14,[3]=10,[4]=121}, -->>Sanguine, Quaking, Fortified
+    [6] =  {[1]=6,[2]=13,[3]=9,[4]=121}, -->>Raging, Explosive, Tyrannical
+    [7] =  {[1]=123,[2]=3,[3]=10,[4]=121}, -->>Spiteful, Volcanic, Fortified
     [8] =  {[1]=7,[2]=4,[3]=9,[4]=121},  -->>Bolstering, Necrotic, Tyrannical
     [9] =  {[1]=124,[2]=122,[3]=10,[4]=121},   -->>Storming, Inspiring, Fortified
     [10] = {[1]=11,[2]=13,[3]=9,[4]=121},  -->>Bursting, Explosive, Tyrannical
@@ -675,9 +675,6 @@ function MDT:ShowInterface(force)
             self.draggedBlip = nil
         end
         MDT:UpdateBottomText()
-        if not next(db.dungeonImport) then
-            MDT:OpenNoDungeonDataWarning()
-        end
 	end
 end
 
@@ -1481,25 +1478,6 @@ function MDT:MakeSidePanel(frame)
     frame.MDIButton.frame:SetScript("OnLeave",function()
     end)
 
-    --Data Import
-    frame.DataImportButton = AceGUI:Create("Button")
-    frame.DataImportButton:SetText(L["Import Data"])
-    frame.DataImportButton:SetWidth(buttonWidth)
-    frame.DataImportButton.frame:SetNormalFontObject(fontInstance)
-    frame.DataImportButton.frame:SetHighlightFontObject(fontInstance)
-    frame.DataImportButton.frame:SetDisabledFontObject(fontInstance)
-    frame.DataImportButton:SetCallback("OnClick",function(widget,callbackName,value)
-        MDT:OpenDataImportDialog()
-    end)
-    frame.DataImportButton.frame:SetScript("OnEnter",function()
-        GameTooltip:SetOwner(frame.DataImportButton.frame, "ANCHOR_BOTTOMLEFT",frame.DataImportButton.frame:GetWidth()*(-2),frame.DataImportButton.frame:GetHeight())
-        GameTooltip:AddLine(L["DataImportButtonTooltip"],1,1,1)
-        GameTooltip:Show()
-    end)
-    frame.DataImportButton.frame:SetScript("OnLeave",function()
-        GameTooltip:Hide()
-    end)
-
     --AutomaticColorsCheckbox
     frame.AutomaticColorsCheckSidePanel = AceGUI:Create("CheckBox")
 	frame.AutomaticColorsCheckSidePanel:SetLabel(L["Automatically color pulls"])
@@ -1545,8 +1523,7 @@ function MDT:MakeSidePanel(frame)
 	frame.sidePanel.WidgetGroup:AddChild(frame.sidePanelExportButton)
 	frame.sidePanel.WidgetGroup:AddChild(frame.LinkToChatButton)
     frame.sidePanel.WidgetGroup:AddChild(frame.LiveSessionButton)
-    frame.sidePanel.WidgetGroup:AddChild(frame.DataImportButton)
-	--frame.sidePanel.WidgetGroup:AddChild(frame.MDIButton)
+	frame.sidePanel.WidgetGroup:AddChild(frame.MDIButton)
     frame.sidePanel.WidgetGroup:AddChild(frame.AutomaticColorsCheckSidePanel)
     frame.sidePanel.WidgetGroup:AddChild(frame.AutomaticColorsCogwheel)
 
@@ -2250,7 +2227,6 @@ local emissaryIds = {[155432]=true,[155433]=true,[155434]=true}
 
 ---Checks if the specified clone is part of the current map configuration
 function MDT:IsCloneIncluded(enemyIdx, cloneIdx)
-    if not next(db.dungeonImport) then return false end
     local preset = MDT:GetCurrentPreset()
     local isCloneBlacktoothEvent = MDT.dungeonEnemies[db.currentDungeonIdx][enemyIdx]["clones"][cloneIdx].blacktoothEvent
     local cloneFaction = MDT.dungeonEnemies[db.currentDungeonIdx][enemyIdx]["clones"][cloneIdx].faction
@@ -2658,8 +2634,6 @@ function MDT:HideAllDialogs()
 	MDT.main_frame.DeleteConfirmationFrame:Hide()
     MDT.main_frame.automaticColorsFrame.CustomColorFrame:Hide()
     MDT.main_frame.automaticColorsFrame:Hide()
-    MDT.main_frame.noDungeonDataWarning:Hide()
-    MDT.main_frame.dataImportDialog:Hide()
     if MDT.main_frame.ConfirmationFrame then MDT.main_frame.ConfirmationFrame:Hide() end
 end
 
@@ -3044,6 +3018,30 @@ MDT.zoneIdToDungeonIdx = {
     [1493] = 26,--upper mecha
     [1494] = 26,--upper mecha
     [1497] = 26,--upper mecha
+    [1663] = 30,
+    [1664] = 30,
+    [1665] = 30,
+    [1666] = 35,
+    [1667] = 35,
+    [1668] = 35,
+    [1669] = 31,
+    [1674] = 32,
+    [1675] = 33,
+    [1676] = 33,
+    [1677] = 29,
+    [1678] = 29,
+    [1679] = 29,
+    [1680] = 29,
+    [1683] = 36,
+    [1684] = 36,
+    [1685] = 36,
+    [1686] = 36,
+    [1687] = 36,
+    [1692] = 34,
+    [1693] = 34,
+    [1694] = 34,
+    [1695] = 34,
+    [1697] = 32,
 }
 local lastUpdatedDungeonIdx
 function MDT:CheckCurrentZone(init)
@@ -4962,10 +4960,6 @@ function initFrames()
         end
     end
 
-    --merge imported dungeon data
-    for dungeonIdx,dungeon in pairs(db.dungeonImport) do
-        MDT.dungeonEnemies[dungeonIdx] = dungeon
-    end
 
     db.nonFullscreenScale = db.nonFullscreenScale or 1
     if not db.maximized then db.scale = db.nonFullscreenScale end
@@ -5018,8 +5012,6 @@ function initFrames()
 	MDT:MakeSendingStatusBar(main_frame)
 	MDT:MakeAutomaticColorsFrame(main_frame)
     MDT:MakeCustomColorFrame(main_frame.automaticColorsFrame)
-    MDT:CreateDataImportDialog(main_frame)
-    MDT:CreateNoDungeonDataWarning(main_frame)
 
     --devMode
     if db.devMode and MDT.CreateDevPanel then
